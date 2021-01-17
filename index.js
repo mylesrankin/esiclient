@@ -17,8 +17,8 @@ class ESIClient {
     }
 
     saveErrorLimits(headers) {
-        this.limitRemain = result.headers['x-esi-error-limit-remain']
-        this.limitReset = result.headers['x-esi-error-limit-reset']
+        this.limitRemain = headers['x-esi-error-limit-remain']
+        this.limitReset = headers['x-esi-error-limit-reset']
     }
 
     async request(route, method, headers, authorization = false, attempt = 1) {
@@ -30,7 +30,6 @@ class ESIClient {
             ...(headers ? { headers } : {})
         }
         if (this.limitRemain > 10) {
-            console.log(this.limitRemain)
             try {
                 const result = await axios(config)
                 this.log.info(`Recieved data for ${method} ${url}`, result)
@@ -38,8 +37,8 @@ class ESIClient {
                 return result
             } catch (e) {
                 this.log.error(`An error occured when querying ${method} ${url}: ${e.message}`, e)
-                const { headers, data } = e.response;
-                if (data.error) {
+                if (e?.data?.error) {
+                    const { headers, data } = e.response;
                     if (
                         headers['x-esi-error-limit-remain'] &&
                         headers['x-esi-error-limit-reset']

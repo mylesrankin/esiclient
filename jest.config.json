@@ -1,8 +1,5 @@
 {
-    "name": "my-project",
-    "jest": {
-        "verbose": true
-    },
+    "name": "esiclient",
     "testMatch": [
         "**/*.steps.js"
     ]
