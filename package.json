@@ -4,8 +4,8 @@
   "description": "A client for managing esi requests, with rate limiting and proxy features",
   "main": "index.js",
   "scripts": {
-    "test": "jest --watch",
-    "ci-test": "jest"
+    "test-watch": "jest --watch",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
