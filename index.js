@@ -3,7 +3,7 @@ const bunyan = require('bunyan');
 const log = bunyan.createLogger({ name: "ESIClient" });
 
 class ESIClient {
-    constructor(esiBaseUrl, { credentials, proxy }) {
+    constructor(esiBaseUrl, { credentials = {}, proxy = false }) {
         this.baseUrl = esiBaseUrl
         this.limitReset = 60
         this.limitRemain = 100
@@ -46,8 +46,8 @@ class ESIClient {
         this.limitReset = headers['x-esi-error-limit-reset']
     }
 
-    async request(route, method, headers, authRequired = false, attempt = 1) {
-        const url = this.baseUrl + route
+    async request(route, method, { headers = false, authRequired = false, attempt = 1, urlOverride = false }) {
+        const url = (urlOverride || this.baseUrl) + route
         const config = {
             url,
             method,
@@ -59,12 +59,13 @@ class ESIClient {
                 if (this.credentials.expiry < new Date(new Date().getTime() + 60 * 1000)) {
                     await this.refreshCredentials()
                 }
+                config.headers = config.headers || {}
                 config.headers.Authorization = `Bearer ${this.credentials.access_token}`
             }
             try {
                 const result = await axios(config)
-                this.log.info(`Recieved data for ${method} ${url}`, result)
-                this.saveErrorLimits(result.headers)--
+                this.log.info(`Recieved data for ${method} ${url}`, result.data)
+                this.saveErrorLimits(result.headers)
                 return result
             } catch (e) {
                 this.log.error(`An error occured when querying ${method} ${url}: ${e.message}`, e)
@@ -85,7 +86,7 @@ class ESIClient {
         } else {
             this.log.warn(`Close to esi-error-limit, throttling request ${method} ${url} for ${this.limitReset} seconds`)
             await this.sleep(this.limitReset * 1000)
-            return this.request(route, method, headers, authRequired, attempt + 1)
+            return this.request(route, method, headers, authRequired, attempt + 1, urlOverride)
         }
     }
 }

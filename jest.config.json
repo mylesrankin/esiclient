@@ -2,5 +2,6 @@
     "name": "esiclient",
     "testMatch": [
         "**/*.steps.js"
-    ]
+    ],
+    "testEnvironment": "node"
 }
