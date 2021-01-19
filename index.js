@@ -3,7 +3,7 @@ const bunyan = require('bunyan');
 const log = bunyan.createLogger({ name: "ESIClient" });
 
 class ESIClient {
-    constructor(esiBaseUrl, { credentials = {}, proxy = false }) {
+    constructor(esiBaseUrl, { credentials = {}, proxy = false, maxAttempts = 50 }) {
         this.baseUrl = esiBaseUrl
         this.limitReset = 60
         this.limitRemain = 100
@@ -46,7 +46,7 @@ class ESIClient {
         this.limitReset = headers['x-esi-error-limit-reset']
     }
 
-    async request(route, method, { headers = false, authRequired = false, attempt = 1, urlOverride = false }) {
+    async request(route, method, { headers = false, authRequired = false, urlOverride = false, attempt = 1 }) {
         const url = (urlOverride || this.baseUrl) + route
         const config = {
             url,
@@ -86,9 +86,26 @@ class ESIClient {
         } else {
             this.log.warn(`Close to esi-error-limit, throttling request ${method} ${url} for ${this.limitReset} seconds`)
             await this.sleep(this.limitReset * 1000)
-            return this.request(route, method, headers, authRequired, attempt + 1, urlOverride)
+            return this.request(route, method, { headers, authRequired, urlOverride, attempt: attempt + 1 })
         }
     }
+
+    async get(route, { headers = false, authRequired = false, urlOverride, attempt = 1 }) {
+        return this.request(route, "GET", { headers, authRequired, urlOverride })
+    }
+
+    async post(route, { headers = false, authRequired = false, urlOverride, attempt = 1 }) {
+        return this.request(route, "POST", { headers, authRequired, attempt, urlOverride })
+    }
+
+    async delete(route, { headers = false, authRequired = false, urlOverride, attempt = 1 }) {
+        return this.request(route, "DELETE", { headers, authRequired, attempt, urlOverride })
+    }
+
+    async update(route, { headers = false, authRequired = false, urlOverride, attempt = 1 }) {
+        return this.request(route, "UPDATE", { headers, authRequired, attempt, urlOverride })
+    }
+
 }
 
 module.exports = ESIClient
