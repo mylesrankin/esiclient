@@ -8,6 +8,7 @@ The client has built in rate limiting and error handling, using the headers CCP 
 First run ```npm install esiclient```
 
 ### Initiate the client
+Get these from EVE Online developer application and manually run the oauth2 flow. A good guide to do this can be found here: https://developers.eveonline.com/blog/article/sso-to-authenticated-calls
 ```
 const ESIClient = require("esiclient")
 // No auth
