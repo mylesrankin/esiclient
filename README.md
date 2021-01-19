@@ -17,7 +17,9 @@ const esiClient = new ESIClient("https://esi.evetech.net/latest", {})
 // Auth
 const credentials = {
           "access_token": "xxxxxxx",
-          "refresh_token": "xxxxxxxx"
+          "refresh_token": "xxxxxxxx",
+          "clientId": "xxxxxxxx",
+          "clientSecret": "xxxxxxxx"
       }
 const esiClient = new ESIClient("https://esi.evetech.net/latest", { credentials })
 ```
