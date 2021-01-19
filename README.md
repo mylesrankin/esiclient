@@ -1,8 +1,7 @@
 # esiclient
-esiclient is a client for making API requests to EVE Online's OpenAPI (ESI).
+esiclient is a client for making easy API requests (both public and secure) to EVE Online's OpenAPI (ESI).
 
-The client has built in rate limiting and error handling, using the headers CCP return in each call.
-
+The client has built in rate limiting and error handling, using the headers CCP return in each call. It can also handle refreshing access tokens when they expire.
 
 ## Using the client
 
