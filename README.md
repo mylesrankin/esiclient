@@ -58,7 +58,7 @@ The client:
 - baseUrl is required - example: "https://esi.evetech.net/latest"
 - credentials and proxy are optional.
 ```
-new ESIClient(baseUrl, { credentials, proxy})
+const esiClient = new ESIClient(baseUrl, { credentials, proxy})
 ```
 
 Requests
