@@ -66,5 +66,5 @@ Requests
 - method is required for .request function, not for .get .update .delete and .post
 - Optional: headers, useAuth, urlOverride
 ```
-esiClient.request(route, method, { headers, authRequired, urlOverride })
+esiClient.request(route, method, { headers, useAuth, urlOverride })
 ```
